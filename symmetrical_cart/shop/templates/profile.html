@@ -1,7 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}Profile{% endblock title %}
+{% block title %}Profile{% endblock %}
 {% block content %}
-
-<h1>Profile</h1>
-
-{% endblock content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ request.user.email }}</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="{% url 'logout' %}" class="btn btn-danger btn-block">Logout</a>
+                        </li>
+                        <li class="list-group-item">
+                            TODO
+                        </li>
+                        <li class="list-group-item">
+                            TODO
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
