@@ -1,6 +1,8 @@
 from .models import CustomUser
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import PasswordChangeForm
+
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -25,3 +27,22 @@ class LoginForm(forms.Form):
                                                             'placeholder': 'Email'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                  'placeholder': 'Password'}))
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(user, *args, **kwargs)
+        self.fields['old_password'].widget.attrs.update({
+            'class': 'form-control',
+            'autocomplete': 'off',
+            'placeholder': 'Old Password'
+        })
+        self.fields['new_password1'].widget.attrs.update({
+            'class': 'form-control',
+            'autocomplete': 'off',
+            'placeholder': 'New Password'
+        })
+        self.fields['new_password2'].widget.attrs.update({
+            'class': 'form-control',
+            'autocomplete': 'off',
+            'placeholder': 'Confirm New Password'
+        })
