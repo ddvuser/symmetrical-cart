@@ -31,4 +31,9 @@ urlpatterns = [
     path('password-reset-complete/',
          PasswordResetCompleteView.as_view(template_name='change-password/password_reset_complete.html'),
                                             name='password_reset_complete'),
+
+    # Email change
+    path('init-email-change/', user_views.init_email_change, name='init_email_change'),
+    path('verify-email-change/', user_views.verify_email_change, name='verify_email_change'),
+    path('submit-new-email/', user_views.submit_new_email, name='submit_new_email'),
 ]
