@@ -8,11 +8,19 @@ from django.contrib.auth.forms import PasswordResetForm
 class RegisterForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ['email', 'password1', 'password2']
+        fields = ['email', 'name', 'surname', 'password1', 'password2']
 
     email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control',
                                                            'autocomplete': 'off',
                                                            'placeholder': 'Email'}))
+    name = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control',
+                                                           'autocomplete': 'off',
+                                                           'placeholder': 'Name'}))
+
+    surname = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control',
+                                                           'autocomplete': 'off',
+                                                           'placeholder': 'Surname'}))
+ 
     password1 = forms.CharField(label='Password', 
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                   'autocomplete': 'off',
