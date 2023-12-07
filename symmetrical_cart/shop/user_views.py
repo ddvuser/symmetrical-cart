@@ -5,14 +5,22 @@ from django.http import HttpResponseNotFound, HttpResponseBadRequest
 from .forms import RegisterForm, LoginForm, CustomPasswordChangeForm
 import random
 import string
+from django.contrib import messages
 from django.core.mail import send_mail
 
 def user_register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            # Register success
             form.save()
+            messages.success(request, 'You are successfully registered.')
             return redirect('login')
+        else:
+            # Register error
+            msg = "Invalid credentials."
+            messages.error(request, msg)
+            return redirect('register')
     else:
         form = RegisterForm()
         return render(request, 'registration/register.html', {'form':form})
@@ -27,16 +35,22 @@ def user_login(request):
             if user:
                 # Login success
                 login(request, user)
+                messages.success(request, 'You are logged in.')
                 return redirect('profile')
             else:
-                # Login error TODO
-                ...
+                # Login error
+                messages.error(request, 'Incorrect credentials.')
+                return redirect('login')
     else:
         form = LoginForm()
     return render(request, 'registration/login.html', {'form':form})
 
 def user_logout(request):
-    logout(request)
+    try:
+        logout(request)
+        messages.success(request, 'You are logged out.')
+    except:
+        message.error(request, 'Something went wrong...')
     return redirect('login')
 
 @login_required()
@@ -44,9 +58,14 @@ def user_change_password(request):
     if request.method == 'POST':
         form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
+            # Password change success
             user = form.save()
             update_session_auth_hash(request, user)
+            messages.success(request, "Password updated.")
             return redirect('profile')
+        else:
+            # Password change error
+            messages.error(request, "Incorrect credentials.")
     else:
         form = CustomPasswordChangeForm(request.user)
     return render(request, 'change-password/change_password.html', {'form':form})
@@ -56,6 +75,7 @@ def init_email_change(request):
     if request.method == 'POST':
         code = ''.join(random.choices(string.digits, k=6))  # Generate a 6-digit code
         request.session['email_change_code'] = code  # Store the code in the session
+        request.session['input_code_attempts'] = 3
         email = request.user.email 
 
         # Send the code to the user's current email address
@@ -86,11 +106,19 @@ def verify_email_change(request):
     if request.method == 'POST':
         entered_code = request.POST.get('verification_code')
         stored_code = request.session.get('email_change_code')
+        attempts = request.session.get('input_code_attempts')
         if entered_code == stored_code:
             # Code verification successful, allow the user to submit a new email
             return redirect('submit_new_email')
         else:
-            ...
+            if attempts > 0:
+                request.session['input_code_attempts'] -= 1
+                msg = f"Incorrect Code. {attempts} attempts left."
+                messages.error(request, msg)
+            else:
+                msg = "Incorrect Code. No attempts left." 
+                messages.error(request, msg)
+                return redirect('profile')
     return render(request, 'email-change/verify_email_change.html')
 
 @login_required(login_url='login')
@@ -104,7 +132,7 @@ def submit_new_email(request):
 
         # Clear the email change code from the session
         request.session.pop('email_change_code', None)
-
+        messages.success(request, "Email updated.")
         return redirect('profile')
 
     return render(request, 'email-change/submit_new_email.html')
