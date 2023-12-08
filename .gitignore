@@ -30,3 +30,6 @@ venv.bak/
 [Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
+
+# User uploads
+uploads/
