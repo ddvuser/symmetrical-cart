@@ -1,5 +1,5 @@
 from django.urls import path
-from . import user_views
+from . import user_views, main_views
 from .forms import CustomPasswordResetForm, CustomPasswordResetConfirmForm
 from django.contrib.auth.views import (
     PasswordResetView,
@@ -9,6 +9,8 @@ from django.contrib.auth.views import (
 )
 
 urlpatterns = [
+    path("", main_views.index, name='index'),
+
     path("profile/", user_views.user_profile, name='profile'),
     path("register/", user_views.user_register, name='register'),
     path("login/", user_views.user_login, name='login'),
