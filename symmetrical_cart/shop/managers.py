@@ -1,6 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
-
+from django.db import models
 
 class CustomUserManager(BaseUserManager):
     """
@@ -32,3 +32,16 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
         return self.create_user(email, password, **extra_fields)
+
+class ProductManager(models.Manager):
+    def get_product_by_id(self, id):
+        return self.filter(id=id)
+
+    def get_all_products(self):
+        return self.all()
+
+    def get_all_products_by_category_id(self, category_id):
+        if category_id:
+            return self.filter(category=category_id)
+        else:
+            return self.all()
