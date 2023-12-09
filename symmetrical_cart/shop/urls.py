@@ -1,5 +1,7 @@
 from django.urls import path
 from . import user_views, main_views
+from django.conf import settings
+from django.conf.urls.static import static
 from .forms import CustomPasswordResetForm, CustomPasswordResetConfirmForm
 from django.contrib.auth.views import (
     PasswordResetView,
@@ -10,6 +12,7 @@ from django.contrib.auth.views import (
 
 urlpatterns = [
     path("", main_views.index, name='index'),
+    path("<slug:slug>", main_views.product_detail, name='product_detail'),
 
     path("profile/", user_views.user_profile, name='profile'),
     path("register/", user_views.user_register, name='register'),
@@ -39,3 +42,6 @@ urlpatterns = [
     path('verify-email-change/', user_views.verify_email_change, name='verify_email_change'),
     path('submit-new-email/', user_views.submit_new_email, name='submit_new_email'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
