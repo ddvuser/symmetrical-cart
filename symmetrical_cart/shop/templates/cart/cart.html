@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Your Cart{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Your Cart</h2>
+    {% if order_products %}
+    <div class="row">
+        {% for order_product in order_products %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img 
+                        src="{{ order_product.product.image.url }}" 
+                        class="card-img-top" 
+                        alt="{{ order_product.product.name }}" 
+                        style="width: 100%; height: 15rem; object-fit: cover;"
+                    >
+                    <div class="card-body">
+                        <h5 class="card-title">{{ order_product.product.name }}</h5>
+                        <p class="card-text">Price: ${{ order_product.product.price }}</p>
+                        <p class="card-text">Quantity: {{ order_product.quantity }}</p>
+                        <form action="{% url 'update_product_quantity' order_product.product.slug %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_slug" value="{{ order_product.product.slug }}">
+                            {% for field in form %}
+                            {% if field.name == 'quantity' %}
+                            <div class="mb-3 d-flex align-items-center">
+                                {{ field.label_tag }}
+                                <div class="input-group">
+                                    <button 
+                                        class="ms-2 btn btn-outline-primary" 
+                                        type="button" 
+                                        id="quantity-decrement">
+                                        -1
+                                    </button>
+                                    <input 
+                                        type="number" 
+                                        id="quantity-input" 
+                                        name="quantity" 
+                                        class="form-control" 
+                                        value="{{ order_product.quantity }}"
+                                    >
+                                    <button 
+                                        class="btn btn-outline-primary" 
+                                        type="button" 
+                                        id="quantity-increment">
+                                        +1
+                                    </button>
+                                </div>
+                                <button type="submit" class="btn btn-primary ms-2">OK</button>
+                                {% if field.errors %}
+                                <small class="text-danger">{{ field.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </form>
+                        <a class="btn btn-outline-danger" 
+                            href="{% url 'remove_from_cart' order_product.id %}">Remove from cart</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <a href="{% url 'index' %}" class="btn btn-primary">Continue Shopping</a>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="#" class="btn btn-success">Proceed to Checkout</a>
+        </div>
+    </div>
+    {% else %}
+    <p>Your cart is empty.</p>
+    <a href="{% url 'index' %}" class="btn btn-primary">Go Shopping</a>
+    {% endif %}
+</div>
+<script src="{% static 'shop/cart.js' %}"></script>
+<script src="{% static 'shop/alert_close.js' %}"></script>
+{% endblock %}
