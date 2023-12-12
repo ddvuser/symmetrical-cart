@@ -53,7 +53,7 @@ class OrderProduct(models.Model):
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"Order: \"{self.product.name}\""
+        return f"OrderProduct: \"{self.product.name}\""
 
 
 class Order(models.Model):
@@ -61,9 +61,11 @@ class Order(models.Model):
     products = models.ManyToManyField(OrderProduct)
     created_date = models.DateTimeField(auto_now_add=True)
     order_date = models.DateTimeField()
-    created = models.BooleanField(default=False)
+    ordered = models.BooleanField(default=False)
     address = models.CharField(max_length=200)
-    
+
+    def get_user_order_products(self, user):
+        return self.products.filter(user=user)
 
     def __str__(self):
         return f"Order: {self.id}"

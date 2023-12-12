@@ -12,7 +12,20 @@ from django.contrib.auth.views import (
 
 urlpatterns = [
     path("", main_views.index, name='index'),
-    path("<slug:slug>", main_views.product_detail, name='product_detail'),
+    path("product/<slug:slug>/", 
+         main_views.product_detail, 
+         name='product_detail'),
+    path("add-to-cart/<slug:product_slug>", 
+         main_views.add_to_cart, 
+         name='add_to_cart'),
+    path("remove-from-cart/<int:orderproduct_id>", 
+         main_views.remove_from_cart, 
+         name='remove_from_cart'),
+    path("update-product-quantity/<slug:product_slug>", 
+         main_views.update_product_quantity, 
+         name='update_product_quantity'),
+
+    path("cart/", main_views.cart, name="cart"),
 
     path("profile/", user_views.user_profile, name='profile'),
     path("register/", user_views.user_register, name='register'),
