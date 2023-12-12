@@ -83,8 +83,14 @@ def cart(request):
     order_products = []
     if order:
         order_products = order.get_user_order_products(request.user)
+        paginator = Paginator(order_products, 7)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context = {
+            "page_obj": page_obj
+        }
 
-    return render(request, 'cart/cart.html', {'order_products': order_products,
+    return render(request, 'cart/cart.html', {'order_products': page_obj,
                                           'form':form})
 
 @login_required()
