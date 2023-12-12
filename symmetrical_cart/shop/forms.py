@@ -71,3 +71,12 @@ class CustomPasswordResetConfirmForm(forms.Form):
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         label="Confirm New Password"
     )
+
+class ProductQuantityForm(forms.Form):
+    quantity = forms.IntegerField(
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Quantity',
+            'type': 'number'}))
+
+
