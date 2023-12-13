@@ -79,4 +79,14 @@ class ProductQuantityForm(forms.Form):
             'placeholder': 'Quantity',
             'type': 'number'}))
 
+class ConfirmOrderForm(forms.Form):
+    address = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Address',
+            'type': 'text',
+        })
+    )
+
 

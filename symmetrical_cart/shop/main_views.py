@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Product, OrderProduct, Order
-from .forms import ProductQuantityForm
+from .forms import ProductQuantityForm, ConfirmOrderForm
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.http import HttpResponse
@@ -81,20 +81,48 @@ def cart(request):
     order = Order.objects.filter(user=request.user, ordered=False).first()
     form = ProductQuantityForm()
     order_products = []
+    page_obj = {}
+    context = {}
     if order:
         order_products = order.get_user_order_products(request.user)
         paginator = Paginator(order_products, 7)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
         context = {
-            "page_obj": page_obj
+            "form": form,
+            "order_products": page_obj,
         }
 
-    return render(request, 'cart/cart.html', {'order_products': page_obj,
-                                          'form':form})
+    return render(request, 'cart/cart.html', context)
 
 @login_required()
 def remove_from_cart(request, orderproduct_id):
     order_product = get_object_or_404(OrderProduct, id=orderproduct_id)
     order_product.delete()
     return redirect('cart')
+
+@login_required()
+def checkout(request):
+    if request.method == "POST":
+        ...
+    else:
+        order = Order.objects.filter(user=request.user, ordered=False).first()
+        order_products = order.get_user_order_products(request.user)
+        form = ConfirmOrderForm()
+        context = {
+            'order': order,
+            'order_products': order_products,
+            'form': form,
+        }
+        return render(request, 'cart/checkout.html', context)
+
+@login_required()
+def confirm_order(request):
+    if request.method == "POST":
+        address = request.POST.get('address')
+        order = Order.objects.filter(user=request.user, ordered=False).first()
+        order.address = address
+        order.ordered = True
+        order.save()
+        return redirect('cart')
+

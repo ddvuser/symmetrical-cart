@@ -67,6 +67,14 @@ class Order(models.Model):
     def get_user_order_products(self, user):
         return self.products.filter(user=user)
 
+    def get_total(self):
+        total = 0
+        for order_product in self.products.all():
+            product_price = order_product.product.price
+            total += product_price * order_product.quantity
+        return total
+
+
     def __str__(self):
         return f"Order: {self.id}"
 
