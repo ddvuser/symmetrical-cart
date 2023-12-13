@@ -23,6 +23,39 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <h3>Orders History:</h3>
+            <div class="accordion">
+                {% for order in orders %}
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <h5 class="mb-0 d-flex justify-content-between">
+                                <button 
+                                    class="btn btn-link"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse_{{ order.id }}"
+                                    aria-expanded="true"
+                                >
+                                {{ order }}
+                                </button>
+                                {{ order.order_date }}
+                            </h5>
+                        </div>
+                        <div id="collapse_{{ order.id }}" class="collapse">
+                            <div class="card-body">
+                                <ul>
+                                    {% for product in order.products.all %}
+                                    <li>Name: {{ product.product.name }} | Quantity: {{ product.quantity }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include 'pagination.html' with page_obj=orders %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

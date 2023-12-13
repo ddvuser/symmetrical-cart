@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound, HttpResponseBadRequest
 from .forms import RegisterForm, LoginForm, CustomPasswordChangeForm
+from .models import Order
+from django.core.paginator import Paginator
 import random
 import string
 from django.contrib import messages
@@ -139,4 +141,11 @@ def submit_new_email(request):
 
 @login_required()
 def user_profile(request):
-    return render(request, 'profile.html') 
+    orders = Order.objects.filter(user=request.user, ordered=True)
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'orders': page_obj,
+    }
+    return render(request, 'profile.html', context) 
