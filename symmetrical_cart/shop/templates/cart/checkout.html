@@ -34,11 +34,11 @@
         </div>
         <div class="col-md-4">
             <h4>Order Total: ${{ order.get_total }}</h4>
-            <p>Shipping address: {{ order.address }}</p>
             <form method="post" action="{% url 'confirm_order' %}">
                 {% csrf_token %}
                 <input type="hidden" name="product_slug" value="{{ order_product.product.slug }}">
                 {% for field in form %}
+                    {{ field.label_tag }}
                     {{ field }}
                     {% if field.errors %}
                         <small class="text-danger">{{ field.errors|striptags }}</small>

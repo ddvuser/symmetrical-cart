@@ -80,8 +80,18 @@ class ProductQuantityForm(forms.Form):
             'type': 'number'}))
 
 class ConfirmOrderForm(forms.Form):
+    phone = forms.CharField(
+        max_length=20,
+        label='Phone number',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control mb-2',
+            'placeholder': 'Phone number',
+            'type': 'text',
+        })
+    )
     address = forms.CharField(
         max_length=200,
+        label='Shipping address',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Address',

@@ -12,6 +12,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=24, blank=True,null=True)
     surname = models.CharField(max_length=24, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -23,7 +24,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    slug = models.SlugField(default="", null=False)
+    slug = models.SlugField(default="", unique=True, null=False)
 
     @staticmethod
     def get_all_categories():
@@ -38,7 +39,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.TextField(blank=True, null=True)
-    slug = models.SlugField(default="", null=False)
+    slug = models.SlugField(default="", unique=True, null=False)
     image = models.ImageField(upload_to='uploads/products/')
 
     objects = ProductManager()
@@ -63,6 +64,7 @@ class Order(models.Model):
     order_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     address = models.CharField(max_length=200)
+    phone = models.CharField(max_length=20, null=True, blank=True)
 
     def get_user_order_products(self, user):
         return self.products.filter(user=user)
@@ -73,7 +75,6 @@ class Order(models.Model):
             product_price = order_product.product.price
             total += product_price * order_product.quantity
         return total
-
 
     def __str__(self):
         return f"Order: {self.id}"
