@@ -13,14 +13,14 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control',
                                                            'autocomplete': 'off',
                                                            'placeholder': 'Email'}))
-    name = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control',
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',
                                                            'autocomplete': 'off',
                                                            'placeholder': 'Name'}))
 
-    surname = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control',
+    surname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',
                                                            'autocomplete': 'off',
                                                            'placeholder': 'Surname'}))
- 
+
     password1 = forms.CharField(label='Password', 
                                 widget=forms.PasswordInput(attrs={'class': 'form-control',
                                                                   'autocomplete': 'off',
