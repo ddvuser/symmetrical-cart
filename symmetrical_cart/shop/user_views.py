@@ -96,7 +96,7 @@ def init_email_change(request):
             Thank you for using our service.
 
             Sincerely,
-            PassVault 
+            Symmetrical Cart 
         '''
         # Send the email with the verification code to the user's current email address
         send_mail(subject, message, 'your_email@example.com', [email], fail_silently=False)
@@ -149,3 +149,16 @@ def user_profile(request):
         'orders': page_obj,
     }
     return render(request, 'profile.html', context) 
+
+@login_required()
+def edit_user(request):
+    if request.method == "POST":
+        user = request.user
+        user.name = request.POST.get("name-input")
+        user.surname = request.POST.get("surname-input")
+        user.phone = request.POST.get("phone-input")
+        user.address = request.POST.get("address-input").strip()
+        user.save()
+        return redirect('profile')
+    else:
+        return redirect('profile')
