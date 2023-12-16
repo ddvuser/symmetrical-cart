@@ -144,13 +144,13 @@ def user_profile(request):
     if request.method == "POST":
         form = EditUserForm(request.POST)
         if form.is_valid():
-            user = request.user
-            user.name = form.cleaned_data["name"]
-            user.surname = form.cleaned_data["surname"]
-            user.phone = form.cleaned_data["phone"]
-            user.address = form.cleaned_data["address"]
-
-            user.save()
+            if form.has_changed():
+                user = request.user
+                user.name = form.cleaned_data["name"]
+                user.surname = form.cleaned_data["surname"]
+                user.phone = form.cleaned_data["phone"]
+                user.address = form.cleaned_data["address"]
+                user.save()
 
             messages.info(request, "You have updated your data.")
             return redirect('profile')
@@ -165,7 +165,7 @@ def user_profile(request):
         }
         form = EditUserForm(initial)
 
-        orders = Order.objects.filter(user=request.user, ordered=True)
+        orders = Order.objects.filter(user=request.user, ordered=True).order_by("-created_date")
         paginator = Paginator(orders, 10)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)

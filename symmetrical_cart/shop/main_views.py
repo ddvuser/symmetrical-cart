@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 
 def index(request):
-    products = Product.objects.get_all_products()
+    products = Product.objects.get_all_products().order_by('name')
     paginator = Paginator(products, 8)
 
     page_number = request.GET.get("page")
@@ -85,7 +85,7 @@ def cart(request):
     page_obj = {}
     context = {}
     if order:
-        order_products = order.get_user_order_products(request.user)
+        order_products = order.get_user_order_products(request.user).order_by("order")
         paginator = Paginator(order_products, 7)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
