@@ -117,3 +117,52 @@ class ConfirmOrderForm(forms.Form):
         })
     )
 
+class EditUserForm(forms.Form):
+    name = forms.CharField(
+        max_length=24,
+        label='Name',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Name',
+            'type': 'text',
+            'id': 'name-input',
+            'name': 'name-input',
+
+        })
+    )
+    surname = forms.CharField(
+        max_length=24,
+        label='Surname',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Surname',
+            'type': 'text',
+            'id': 'surname-input',
+            'name': 'surname-input',
+            
+        })
+    )
+    phone = forms.CharField(
+        max_length=20,
+        label='Phone',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Surname',
+            'type': 'text',
+            'id': 'phone-input',
+            'name': 'phone-input',
+            
+        })
+    )
+    address = forms.CharField(
+        max_length=200,
+        label='Address',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Address',
+            'type': 'text',
+            'id': 'address-input',
+            'name': 'address-input',
+
+        })
+    )
