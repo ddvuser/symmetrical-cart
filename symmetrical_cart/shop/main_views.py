@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.utils import timezone
 from django.http import HttpResponse
 from django.contrib import messages
+from django.core.mail import send_mail
 
 def index(request):
     products = Product.objects.get_all_products()
@@ -105,7 +106,14 @@ def remove_from_cart(request, orderproduct_id):
 def checkout(request):
     order = Order.objects.filter(user=request.user, ordered=False).first()
     order_products = order.get_user_order_products(request.user)
-    form = ConfirmOrderForm()
+    initial = {
+        'receiver_name': request.user.name,
+        'receiver_surname': request.user.surname,
+        'phone': request.user.phone,
+        'address': request.user.address,
+
+    }
+    form = ConfirmOrderForm(initial)
     context = {
         'order': order,
         'order_products': order_products,
@@ -116,10 +124,24 @@ def checkout(request):
 @login_required()
 def confirm_order(request):
     if request.method == "POST":
-        address = request.POST.get('address')
-        order = Order.objects.filter(user=request.user, ordered=False).first()
-        order.address = address
-        order.ordered = True
-        order.save()
-        return redirect('cart')
+        form = ConfirmOrderForm(request.POST)
+        if form.is_valid():
+            order = Order.objects.filter(user=request.user, ordered=False).first()
+            cleaned_data = form.cleaned_data
+
+            order.receiver_name = cleaned_data.get('receiver_name')
+            order.receiver_surname = cleaned_data.get('receiver_surname')
+            order.phone = cleaned_data.get('phone')
+            order.address = cleaned_data.get('address')
+
+            order.ordered = True
+            order.save()
+        
+            # Send email confirmation
+            subject = 'Order Confirmation'
+            email = request.user.email
+            message = f'We\' received your order.'
+            
+            send_mail(subject, message, 'symmetrical_cart@example.com', [email], fail_silently=False)
+            return redirect('cart')
 

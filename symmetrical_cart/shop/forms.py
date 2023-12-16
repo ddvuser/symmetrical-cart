@@ -1,4 +1,4 @@
-from .models import CustomUser
+from .models import CustomUser, Order
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
@@ -80,6 +80,24 @@ class ProductQuantityForm(forms.Form):
             'type': 'number'}))
 
 class ConfirmOrderForm(forms.Form):
+    receiver_name = forms.CharField(
+        max_length=20,
+        label='Receiver Name',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control mb-2',
+            'placeholder': 'Receiver Name',
+            'type': 'text',
+        })
+    )
+    receiver_surname = forms.CharField(
+        max_length=20,
+        label='Receiver Surname',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control mb-2',
+            'placeholder': 'Receiver Surname',
+            'type': 'text',
+        })
+    )
     phone = forms.CharField(
         max_length=20,
         label='Phone number',
@@ -98,5 +116,4 @@ class ConfirmOrderForm(forms.Form):
             'type': 'text',
         })
     )
-
 

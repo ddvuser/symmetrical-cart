@@ -64,6 +64,8 @@ class Order(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     order_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
+    receiver_name = models.CharField(max_length=24)
+    receiver_surname = models.CharField(max_length=24)
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=20, null=True, blank=True)
 
