@@ -25,6 +25,10 @@ urlpatterns = [
          main_views.update_product_quantity, 
          name='update_product_quantity'),
 
+    path("category/", main_views.category, name='category'),
+    path("category/<slug:category_slug>", main_views.category_detail, name='category_detail'),
+    
+
     path('checkout/', main_views.checkout, name="checkout"),
     path('confirm-order/', main_views.confirm_order, name="confirm_order"),
 

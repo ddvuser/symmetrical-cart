@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Product, OrderProduct, Order
+from .models import Product, OrderProduct, Order, Category
 from .forms import ProductQuantityForm, ConfirmOrderForm
 from django.core.paginator import Paginator
 from django.utils import timezone
@@ -22,6 +22,26 @@ def index(request):
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
     return render(request, 'product/product_detail.html', {'product': product})
+
+def category(request):
+    categories = Category.objects.all()
+    context = {
+        "categories": categories 
+    }
+    return render(request, 'category/category.html', context)
+
+def category_detail(request, category_slug):
+    category = Category.objects.get(slug=category_slug)
+    products = Product.objects.filter(category=category)
+    paginator = Paginator(products, 8)
+    
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'category': category,
+        'page_obj': page_obj,
+    }
+    return render(request, 'category/category_detail.html', context)
 
 @login_required()
 def add_to_cart(request, product_slug):

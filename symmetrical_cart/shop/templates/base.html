@@ -44,6 +44,9 @@
                     <!-- Left-aligned items -->
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'category' %}">Category</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile' %}">Profile</a>
                         </li>
                         <li class="nav-item">
