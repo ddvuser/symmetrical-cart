@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound, HttpResponseBadRequest
-from .forms import RegisterForm, LoginForm, CustomPasswordChangeForm
+from .forms import RegisterForm, LoginForm, CustomPasswordChangeForm, EditUserForm
 from .models import Order
 from django.core.paginator import Paginator
 import random
@@ -141,24 +141,36 @@ def submit_new_email(request):
 
 @login_required()
 def user_profile(request):
-    orders = Order.objects.filter(user=request.user, ordered=True)
-    paginator = Paginator(orders, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    context = {
-        'orders': page_obj,
-    }
-    return render(request, 'profile.html', context) 
-
-@login_required()
-def edit_user(request):
     if request.method == "POST":
-        user = request.user
-        user.name = request.POST.get("name-input")
-        user.surname = request.POST.get("surname-input")
-        user.phone = request.POST.get("phone-input")
-        user.address = request.POST.get("address-input").strip()
-        user.save()
-        return redirect('profile')
+        form = EditUserForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            user.name = form.cleaned_data["name"]
+            user.surname = form.cleaned_data["surname"]
+            user.phone = form.cleaned_data["phone"]
+            user.address = form.cleaned_data["address"]
+
+            user.save()
+
+            messages.info(request, "You have updated your data.")
+            return redirect('profile')
+        else:
+            messages.danger(request, "Invalid form data.")
     else:
-        return redirect('profile')
+        initial = {
+            'name': request.user.name,
+            'surname': request.user.surname,
+            'phone': request.user.phone,
+            'address': request.user.address,
+        }
+        form = EditUserForm(initial)
+
+        orders = Order.objects.filter(user=request.user, ordered=True)
+        paginator = Paginator(orders, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context = {
+            'orders': page_obj,
+            'form': form,
+        }
+        return render(request, 'profile.html', context) 

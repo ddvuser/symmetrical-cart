@@ -10,67 +10,24 @@
                     <h4>{{ request.user.email }}</h4>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{% url 'edit_user' %}">
+                    <form method="post">
                         {% csrf_token %}
-                            <div class="input-group input-group-sm mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Name:</span>
-                                    <input 
-                                        name="name-input"
-                                        type="text" 
-                                        class="form-control"
-                                        placeholder="Name"
-                                        id="name-input"
-                                        value={{ request.user.name }}
-                                        maxlength="24"
-                                    >
-                            </div>
-                            <div class="input-group input-group-sm mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Surname:</span>
-                                    <input 
-                                        name="surname-input"
-                                        type="text" 
-                                        class="form-control"
-                                        placeholder="Surname"
-                                        id="surname-input"
-                                        value={{ request.user.surname }}
-                                        maxlength=24
-                                    >
-                            </div>
-                            <div class="input-group input-group-sm mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Phone:</span>
-                                    <input
-                                        name="phone-input"
-                                        type="text" 
-                                        class="form-control"
-                                        placeholder="Phone"
-                                        id="phone-input"
-                                        {% if request.user.phone %}
-                                            value={{ request.user.phone }}
-                                        {% endif %}
-                                        maxlength="20"
-                                    >
-                            </div>
-                            <div class="input-group input-group-sm mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-sm">Address:</span>
-                                    <input 
-                                        name="address-input"
-                                        type="text" 
-                                        class="form-control"
-                                        placeholder="Address"
-                                        id="address-input"
-                                        {% if request.user.address %}
-                                            value={{ request.user.address | safe }}
-                                        {% endif %}
-                                        maxlength="200"
-                                    >
-                            </div>
-                            <button 
-                                class="btn btn-outline-primary" 
-                                id="save-btn" 
-                                style="display: none;"
-                            >
-                            Save edits
-                            </button>
+                            {% for field in form %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text">{{ field.label_tag }}</span>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <small class="text-danger">{{ field.errors|striptags }}</small>
+                                    {% endif %}
+                                </div>
+                        {% endfor %}
+                        <button 
+                            class="btn btn-outline-primary" 
+                            id="save-btn" 
+                            style="display: none;"
+                        >
+                        Save edits
+                        </button>
                     </form>
                 </div>
                 <div class="card-body">
@@ -124,4 +81,5 @@
     </div>
 </div>
 <script src="{% static 'shop/profile.js' %}"></script>
+<script src="{% static 'shop/alert_close.js' %}"></script>
 {% endblock %}
