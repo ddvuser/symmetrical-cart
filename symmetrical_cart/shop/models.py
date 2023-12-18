@@ -42,6 +42,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     slug = models.SlugField(default="", unique=True, null=False)
     image = models.ImageField(upload_to='uploads/products/')
+    release = models.DateField()
 
     objects = ProductManager()
 
