@@ -4,8 +4,9 @@ from django.utils import timezone
 from datetime import date
 
 class ProductModelTestCase(TestCase):
+
+    @classmethod
     def setUp(cls):
-        # Create test data that will be used across the test methods
         category = Category.objects.create(name='Test Category')
         Product.objects.create(
             name='Test Product',
@@ -26,7 +27,6 @@ class ProductModelTestCase(TestCase):
         self.assertEqual(product.slug, 'test-product')
         self.assertEqual(product.image, 'path/to/image.png')
         self.assertTrue(isinstance(product.release, date))
-        # Add more assertions as needed based on your model fields and data
 
     def test_product_str_representation(self):
         # Test the string representation of the Product model
