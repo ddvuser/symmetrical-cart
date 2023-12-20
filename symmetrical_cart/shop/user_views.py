@@ -141,7 +141,9 @@ def submit_new_email(request):
 
 @login_required()
 def user_profile(request):
+    is_get_form = True
     if request.method == "POST":
+        is_get_form = False
         form = EditUserForm(request.POST)
         if form.is_valid():
             if form.has_changed():
@@ -155,7 +157,7 @@ def user_profile(request):
                 messages.info(request, "You have updated your data.")
             return redirect('profile')
         else:
-            messages.danger(request, "Invalid form data.")
+            messages.error(request, "Invalid form data.")
     else:
         initial = {
             'name': request.user.name,
@@ -172,5 +174,6 @@ def user_profile(request):
     context = {
         'orders': page_obj,
         'form': form,
+        'is_get_form': is_get_form,
     }
     return render(request, 'profile.html', context)

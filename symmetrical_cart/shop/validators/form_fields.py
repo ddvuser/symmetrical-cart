@@ -15,3 +15,11 @@ name_validator = RegexValidator(
     message = 'Enter a valid name/surname',
     code = 'invalid_name'
 )
+
+address_regex = r'^[a-zA-Z0-9\s,\'-]*$'
+
+address_validator = RegexValidator(
+    regex=address_regex,
+    message='Enter a valid shipping address.',
+    code='invalid_address'
+)

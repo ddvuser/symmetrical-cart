@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 {% block title %}Profile{% endblock %}
 {% block content %}
 <div class="container mt-5">
@@ -10,15 +11,29 @@
                     <h4>{{ request.user.email }}</h4>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" novalidate>
                         {% csrf_token %}
                             {% for field in form %}
-                                <div class="input-group input-group-sm mb-3">
+                                <div class="input-group input-group-sm mb-2">
                                     <span class="input-group-text">{{ field.label_tag }}</span>
-                                    {{ field }}
-                                    {% if field.errors %}
-                                        <small class="text-danger">{{ field.errors|striptags }}</small>
-                                    {% endif %}
+                                        {% if is_get_form %}
+                                            {{ field }}
+                                        {% else %}
+                                            {% if field.errors %}
+                                                {% render_field field class+="is-invalid" %}
+                                            {% else %}
+                                                {% render_field field class+="is-valid" %}
+                                            {% endif %}
+                                            {% if field.errors %}
+                                                <div class="invalid-feedback">
+                                                    {{ field.errors}}
+                                                </div>
+                                            {% else %}
+                                                <div class="valid-feedback">
+                                                    Looks good.
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
                                 </div>
                         {% endfor %}
                         <button 

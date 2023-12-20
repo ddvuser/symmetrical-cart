@@ -4,7 +4,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.validators import MinValueValidator
-from .validators.form_fields import phone_validator, name_validator
+from .validators.form_fields import (
+    phone_validator,
+    name_validator,
+    address_validator)
 
 
 class RegisterForm(UserCreationForm):
@@ -123,12 +126,13 @@ class ConfirmOrderForm(forms.Form):
             'class': 'form-control',
             'placeholder': 'Address',
             'type': 'text',
-        })
+        }),
+        validators=[address_validator]
     )
 
 class EditUserForm(forms.Form):
     name = forms.CharField(
-        max_length=24,
+        max_length=20,
         label='Name',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -137,10 +141,11 @@ class EditUserForm(forms.Form):
             'id': 'name-input',
             'name': 'name-input',
 
-        })
+        }),
+        validators=[name_validator]
     )
     surname = forms.CharField(
-        max_length=24,
+        max_length=20,
         label='Surname',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -149,7 +154,8 @@ class EditUserForm(forms.Form):
             'id': 'surname-input',
             'name': 'surname-input',
             
-        })
+        }),
+        validators=[name_validator]
     )
     phone = forms.CharField(
         max_length=20,
@@ -161,7 +167,8 @@ class EditUserForm(forms.Form):
             'id': 'phone-input',
             'name': 'phone-input',
             
-        })
+        }),
+        validators=[phone_validator]
     )
     address = forms.CharField(
         max_length=200,
@@ -172,7 +179,8 @@ class EditUserForm(forms.Form):
             'type': 'text',
             'id': 'address-input',
             'name': 'address-input',
-        })
+        }),
+        validators=[address_validator]
     )
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
