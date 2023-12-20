@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    console.log("wtf")
     var quantityIncrementButtons = document.querySelectorAll('#quantity-increment');
     var quantityDecrementButtons = document.querySelectorAll('#quantity-decrement');
 
@@ -12,7 +13,9 @@ document.addEventListener("DOMContentLoaded", function() {
     quantityDecrementButtons.forEach(function(button) {
         button.addEventListener('click', function() {
             var input = button.parentElement.querySelector('#quantity-input');
-            input.value = parseInt(input.value) - 1;
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
         });
     });
 });

@@ -152,7 +152,7 @@ def user_profile(request):
                 user.address = form.cleaned_data["address"]
                 user.save()
 
-            messages.info(request, "You have updated your data.")
+                messages.info(request, "You have updated your data.")
             return redirect('profile')
         else:
             messages.danger(request, "Invalid form data.")
@@ -165,12 +165,12 @@ def user_profile(request):
         }
         form = EditUserForm(initial)
 
-        orders = Order.objects.filter(user=request.user, ordered=True).order_by("-created_date")
-        paginator = Paginator(orders, 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        context = {
-            'orders': page_obj,
-            'form': form,
-        }
-        return render(request, 'profile.html', context) 
+    orders = Order.objects.filter(user=request.user, ordered=True).order_by("-created_date")
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'orders': page_obj,
+        'form': form,
+    }
+    return render(request, 'profile.html', context)

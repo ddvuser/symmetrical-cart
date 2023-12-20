@@ -54,9 +54,6 @@
                                             href="{% url 'remove_from_cart' order_product.id %}">
                                             Remove from cart
                                         </a>
-                                    {% if field.errors %}
-                                        <small class="text-danger">{{ field.errors|striptags }}</small>
-                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </form>

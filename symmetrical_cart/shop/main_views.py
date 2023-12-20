@@ -79,7 +79,7 @@ def add_to_cart(request, product_slug):
 def update_product_quantity(request, product_slug):
     new_quantity = request.POST.get('quantity')
     if request.method == "POST":
-        if not new_quantity.isnumeric():
+        if not new_quantity.lstrip('-').isdigit():
             msg = f"Product quantity can only be numeric."
             messages.info(request, msg)
             return redirect('cart')
