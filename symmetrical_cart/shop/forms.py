@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import PasswordResetForm
+from django.core.validators import MinValueValidator
 
 
 class RegisterForm(UserCreationForm):
@@ -77,7 +78,11 @@ class ProductQuantityForm(forms.Form):
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
             'placeholder': 'Quantity',
-            'type': 'number'}))
+            'type': 'number',
+            }),
+        validators=[MinValueValidator(1)]
+        
+    )
 
 class ConfirmOrderForm(forms.Form):
     receiver_name = forms.CharField(
@@ -147,7 +152,7 @@ class EditUserForm(forms.Form):
         label='Phone',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Surname',
+            'placeholder': 'Phone',
             'type': 'text',
             'id': 'phone-input',
             'name': 'phone-input',
@@ -163,6 +168,10 @@ class EditUserForm(forms.Form):
             'type': 'text',
             'id': 'address-input',
             'name': 'address-input',
-
         })
     )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone'].required = False
+        self.fields['address'].required = False
+
