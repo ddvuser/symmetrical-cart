@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.validators import MinValueValidator
+from .validators.form_fields import phone_validator, name_validator
 
 
 class RegisterForm(UserCreationForm):
@@ -92,7 +93,8 @@ class ConfirmOrderForm(forms.Form):
             'class': 'form-control mb-2',
             'placeholder': 'Receiver Name',
             'type': 'text',
-        })
+        }),
+        validators=[name_validator]
     )
     receiver_surname = forms.CharField(
         max_length=20,
@@ -101,7 +103,8 @@ class ConfirmOrderForm(forms.Form):
             'class': 'form-control mb-2',
             'placeholder': 'Receiver Surname',
             'type': 'text',
-        })
+        }),
+        validators=[name_validator]
     )
     phone = forms.CharField(
         max_length=20,
@@ -110,7 +113,8 @@ class ConfirmOrderForm(forms.Form):
             'class': 'form-control mb-2',
             'placeholder': 'Phone number',
             'type': 'text',
-        })
+        }),
+        validators=[phone_validator]
     )
     address = forms.CharField(
         max_length=200,

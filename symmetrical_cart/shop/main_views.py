@@ -129,26 +129,13 @@ def remove_from_cart(request, orderproduct_id):
 def checkout(request):
     order = Order.objects.filter(user=request.user, ordered=False).first()
     order_products = order.get_user_order_products(request.user)
-    initial = {
-        'receiver_name': request.user.name,
-        'receiver_surname': request.user.surname,
-        'phone': request.user.phone,
-        'address': request.user.address,
+    is_get_form = True
 
-    }
-    form = ConfirmOrderForm(initial)
-    context = {
-        'order': order,
-        'order_products': order_products,
-        'form': form,
-    }
-    return render(request, 'cart/checkout.html', context)
-
-@login_required()
-def confirm_order(request):
     if request.method == "POST":
         form = ConfirmOrderForm(request.POST)
+        is_get_form = False
         if form.is_valid():
+            # Process the form if it's valid
             order = Order.objects.filter(user=request.user, ordered=False).first()
             cleaned_data = form.cleaned_data
 
@@ -159,12 +146,30 @@ def confirm_order(request):
 
             order.ordered = True
             order.save()
-        
-            # Send email confirmation
+            messages.success(request, "Order successfully placed.")
             subject = 'Order Confirmation'
             email = request.user.email
             message = f'We\' received your order.'
             
             send_mail(subject, message, 'symmetrical_cart@example.com', [email], fail_silently=False)
             return redirect('cart')
+        else:
+            # If the form is invalid, display an error message
+            messages.error(request, "Form is invalid.")
+    else:
+        # If it's a GET request, initialize a clean form
+        initial = {
+            'receiver_name': request.user.name,
+            'receiver_surname': request.user.surname,
+            'phone': request.user.phone,
+            'address': request.user.address,
+        }
+        form = ConfirmOrderForm(initial=initial)
 
+    context = {
+        'order': order,
+        'order_products': order_products,
+        'form': form,
+        'is_get_form': is_get_form,
+    }
+    return render(request, 'cart/checkout.html', context)

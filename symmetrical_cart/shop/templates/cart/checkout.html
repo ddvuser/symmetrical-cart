@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block title %}Checkout{% endblock %}
 {% block content %}
 <div class="container mt-4">
@@ -31,17 +32,32 @@
                     </div>
                 {% endfor %}
             </div>
+            <a class="btn btn-outline-secondary" href="{% url 'cart' %}">Go back</a>
         </div>
         <div class="col-md-4">
             <h4>Order Total: ${{ order.get_total }}</h4>
-            <form method="post" action="{% url 'confirm_order' %}">
+            <form method="post" novalidate>
                 {% csrf_token %}
                 <input type="hidden" name="product_slug" value="{{ order_product.product.slug }}">
                 {% for field in form %}
                     {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.errors %}
-                        <small class="text-danger">{{ field.errors|striptags }}</small>
+                    {% if is_get_form %}
+                        {{ field }}
+                    {% else %}
+                        {% if field.errors %}
+                            {% render_field field class+="is-invalid" %}
+                        {% else %}
+                            {% render_field field class+="is-valid" %}
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="invalid-feedback">
+                                {{ field.errors}}
+                            </div>
+                        {% else %}
+                            <div class="valid-feedback">
+                                Looks good.
+                            </div>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
                 <button type="submit" class="btn btn-primary mt-2">Confirm Order</button>
