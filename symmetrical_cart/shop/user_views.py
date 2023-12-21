@@ -11,7 +11,10 @@ from django.contrib import messages
 from django.core.mail import send_mail
 
 def user_register(request):
+    is_get_form = True
+    form = RegisterForm()
     if request.method == 'POST':
+        is_get_form = False
         form = RegisterForm(request.POST)
         if form.is_valid():
             # Register success
@@ -22,13 +25,18 @@ def user_register(request):
             # Register error
             msg = "Invalid credentials."
             messages.error(request, msg)
-            return redirect('register')
-    else:
-        form = RegisterForm()
-        return render(request, 'registration/register.html', {'form':form})
+
+    context = {
+        'form':form,
+        'is_get_form': is_get_form,
+    }
+    return render(request, 'registration/register.html', context)
 
 def user_login(request):
+    is_get_form = True
+    form = LoginForm()
     if request.method == 'POST':
+        is_get_form = False
         form = LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -42,10 +50,11 @@ def user_login(request):
             else:
                 # Login error
                 messages.error(request, 'Incorrect credentials.')
-                return redirect('login')
-    else:
-        form = LoginForm()
-    return render(request, 'registration/login.html', {'form':form})
+    context = {
+        'form': form,
+        'is_get_form': is_get_form,
+    }
+    return render(request, 'registration/login.html', context)
 
 def user_logout(request):
     try:

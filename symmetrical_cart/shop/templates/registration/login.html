@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block title %}Login{% endblock title %}
 {% block content %}
 <div class="container mt-5">
@@ -9,18 +10,40 @@
                     <h2 class="mb-0">Login</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" novalidate>
                         {% csrf_token %}
-                        {% for field in form %}
-                            <div class="mb-3">
-                                {{ field.label_tag }}
-                                {{ field }}
-                                {% if field.errors %}
-                                    <small class="text-danger">{{ field.errors|striptags }}</small>
-                                {% endif %}
+                        {% if form.errors %}
+                            <div class="form-label">
+                                <small class="text-danger">Email or password is not valid.</small>
                             </div>
+                        {% endif %}
+                        {% for field in form %}
+                            {{ field.label_tag }}
+                            {% if is_get_form %}
+                                {{ field }}
+                            {% else %}
+                                {% if field.name != 'password' %}
+                                    {% if field.errors %}
+                                        {% render_field field class+="is-invalid" %}
+                                    {% else %}
+                                        {% render_field field class+="is-valid" %}
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ field.errors}}
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ field.errors}}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
                         {% endfor %}
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-2">Login</button>
                         <a href="{% url 'password_reset' %}" class="d-block text-center mt-3">Forgot your password?</a>
                         <a href="{% url 'register' %}" class="d-block text-center">Don't have an account? Register here</a>
                     </form>

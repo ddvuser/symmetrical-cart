@@ -8,7 +8,8 @@ from .validators.form_fields import (
     phone_validator,
     name_validator,
     address_validator,
-    quantity_validator)
+    quantity_validator,
+    password_validator)
 
 
 class RegisterForm(UserCreationForm):
@@ -16,32 +17,70 @@ class RegisterForm(UserCreationForm):
         model = CustomUser
         fields = ['email', 'name', 'surname', 'password1', 'password2']
 
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control',
-                                                           'autocomplete': 'off',
-                                                           'placeholder': 'Email'}))
-    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',
-                                                           'autocomplete': 'off',
-                                                           'placeholder': 'Name'}))
+    email = forms.EmailField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'autocomplete': 'off',
+                   'placeholder': 'Email',
+            }
+        )
+    )
+    name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'autocomplete': 'off',
+                   'placeholder': 'Name'
+            }
+        ),
+        validators=[name_validator]
 
-    surname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',
-                                                           'autocomplete': 'off',
-                                                           'placeholder': 'Surname'}))
-
-    password1 = forms.CharField(label='Password', 
-                                widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                  'autocomplete': 'off',
-                                                                  'placeholder': 'Password'}))
-    password2 = forms.CharField(label='Password confirmation', 
-                                widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                  'autocomplete': 'off',
-                                                                  'placeholder': 'Password confirmation'}))
+    )
+    surname = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control',
+                   'autocomplete': 'off',
+                   'placeholder': 'Surname'
+            }
+        ),
+        validators=[name_validator]
+    )
+    password1 = forms.CharField(
+        label='Password', 
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control',
+                   'autocomplete': 'off',
+                   'placeholder': 'Password'
+            }
+        ),
+        validators=[password_validator]
+    )
+    password2 = forms.CharField(
+        label='Password confirmation', 
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control',
+                   'autocomplete': 'off',
+                   'placeholder': 'Password confirmation'
+            }
+        ),
+        validators=[password_validator]
+    )
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control',
-                                                            'placeholder': 'Email'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                                                 'placeholder': 'Password'}))
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={'class': 'form-control',
+                   'placeholder': 'Email',
+            }
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control',
+                   'placeholder': 'Password',
+            }
+        )
+    )
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     def __init__(self, user, *args, **kwargs):

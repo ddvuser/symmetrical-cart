@@ -13,7 +13,7 @@
                 >
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-            <form method="get" action="{% url 'index' %}" class="mb-2">
+            <form method="get" action="{% url 'index' %}" class="mb-2" autocomplete="off">
                 <div class="form-group">
                     <label 
                         for="{{ product_filter.form.price__lt.id_for_label }}"

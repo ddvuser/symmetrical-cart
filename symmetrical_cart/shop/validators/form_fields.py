@@ -31,3 +31,15 @@ quantity_validator = RegexValidator(
     message='Product quantity must be a positive integer.',
     code='invalid_quantity'
 )
+
+password_regex =  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-_]).{8,}$'
+password_validator = RegexValidator(
+    regex=password_regex,
+    message='''
+                Minimum eight characters, 
+                at least one upper case English letter, 
+                one lower case English letter, 
+                one number and one special character
+            ''',
+    code = 'invalid_password'
+)
