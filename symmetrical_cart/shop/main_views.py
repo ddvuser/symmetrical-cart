@@ -10,15 +10,17 @@ from django.contrib import messages
 from django.core.mail import send_mail
 
 def index(request):
-    product_filter = ProductFilter(request.GET, Product.objects.get_all_products())
+    product_filter = ProductFilter(request.GET, Product.objects.get_all_products().order_by("name"))
     filtered_products = product_filter.qs
     paginator = Paginator(filtered_products, 8)
+    categories = Category.objects.all()
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     context = {
         "page_obj": page_obj,
-        "product_filter": product_filter
+        "product_filter": product_filter,
+        "categories": categories
     }
     return render(request, "index.html", context=context)
 
