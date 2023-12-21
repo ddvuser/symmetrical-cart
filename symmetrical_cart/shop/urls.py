@@ -21,10 +21,7 @@ urlpatterns = [
     path("remove-from-cart/<int:orderproduct_id>", 
          main_views.remove_from_cart, 
          name='remove_from_cart'),
-    path("update-product-quantity/<slug:product_slug>", 
-         main_views.update_product_quantity, 
-         name='update_product_quantity'),
-
+    
     path("category/", main_views.category, name='category'),
     path("category/<slug:category_slug>", main_views.category_detail, name='category_detail'),
     

@@ -76,19 +76,16 @@ def add_to_cart(request, product_slug):
         return redirect('cart')
 
 @login_required()
-def update_product_quantity(request, product_slug):
-    new_quantity = request.POST.get('quantity')
+def cart(request):
+    is_get_form = True
+    order = Order.objects.filter(user=request.user, ordered=False).first()
+    order_products = order.get_user_order_products(request.user).order_by("order")
+    form = ProductQuantityForm()
     if request.method == "POST":
-        if not new_quantity.lstrip('-').isdigit():
-            msg = f"Product quantity can only be numeric."
-            messages.info(request, msg)
-            return redirect('cart')
-
-        if int(new_quantity) < 1:
-            msg = f"Product quantity cannot be less than 1."
-            messages.info(request, msg)
-            return redirect('cart')
-        else:
+        form = ProductQuantityForm(request.POST)
+        is_get_form = False
+        if form.is_valid():
+            product_slug = request.POST.get('product_slug')
             product = get_object_or_404(Product, slug=product_slug)
             order_product = OrderProduct.objects.get(user=request.user,
                                                      ordered=False,
@@ -98,24 +95,20 @@ def update_product_quantity(request, product_slug):
             msg = f"Product: {product.name} quantity is updated."
             messages.info(request, msg)
             return redirect('cart')
+        else:
+            msg = "Quantity is invalid"
+            messages.info(request, msg)
 
-@login_required()
-def cart(request):
-    # Fetch the order for the logged-in user
-    order = Order.objects.filter(user=request.user, ordered=False).first()
-    form = ProductQuantityForm()
-    order_products = []
-    page_obj = {}
-    context = {}
-    if order:
-        order_products = order.get_user_order_products(request.user).order_by("order")
-        paginator = Paginator(order_products, 7)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        context = {
-            "form": form,
-            "order_products": page_obj,
-        }
+    order_products = order.get_user_order_products(request.user).order_by("order")
+    paginator = Paginator(order_products, 7)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "form": form,
+        "order_products": page_obj,
+        "is_get_form": is_get_form,
+    }
 
     return render(request, 'cart/cart.html', context)
 

@@ -7,7 +7,8 @@ from django.core.validators import MinValueValidator
 from .validators.form_fields import (
     phone_validator,
     name_validator,
-    address_validator)
+    address_validator,
+    quantity_validator)
 
 
 class RegisterForm(UserCreationForm):
@@ -83,8 +84,9 @@ class ProductQuantityForm(forms.Form):
             'class': 'form-control',
             'placeholder': 'Quantity',
             'type': 'number',
-            }),
-        validators=[MinValueValidator(1)]
+            'id': 'quantity-input',
+        }),
+        validators=[MinValueValidator(1), quantity_validator]
         
     )
 

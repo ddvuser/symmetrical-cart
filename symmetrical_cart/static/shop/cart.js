@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("wtf")
     var quantityIncrementButtons = document.querySelectorAll('#quantity-increment');
     var quantityDecrementButtons = document.querySelectorAll('#quantity-decrement');
 

@@ -23,3 +23,11 @@ address_validator = RegexValidator(
     message='Enter a valid shipping address.',
     code='invalid_address'
 )
+
+quantity_regex = r'^\d+$'
+
+quantity_validator = RegexValidator(
+    regex=quantity_regex,
+    message='Product quantity must be a positive integer.',
+    code='invalid_quantity'
+)
