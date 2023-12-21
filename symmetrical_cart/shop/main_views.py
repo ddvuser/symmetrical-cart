@@ -81,7 +81,7 @@ def add_to_cart(request, product_slug):
 def cart(request):
     is_get_form = True
     order = Order.objects.filter(user=request.user, ordered=False).first()
-    order_products = order.get_user_order_products(request.user).order_by("order")
+    order_products = [] 
     form = ProductQuantityForm()
     if request.method == "POST":
         form = ProductQuantityForm(request.POST)
@@ -100,8 +100,8 @@ def cart(request):
         else:
             msg = "Quantity is invalid"
             messages.info(request, msg)
-
-    order_products = order.get_user_order_products(request.user).order_by("order")
+    if order:
+        order_products = order.get_user_order_products(request.user).order_by("order")
     paginator = Paginator(order_products, 7)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
