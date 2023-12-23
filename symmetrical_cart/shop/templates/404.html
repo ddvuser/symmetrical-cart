@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 text-center">
+            <img src="{% static 'img/404-error.png' %}" class="img-fluid mb-4" alt="404 Error">
+            <h1 class="display-4">404</h1>
+            <p class="lead">Oops! Page not found.</p>
+            <p class="text-muted">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+            <a href="/" class="btn btn-primary">Go to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
