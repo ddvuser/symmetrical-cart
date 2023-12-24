@@ -69,6 +69,9 @@ class Order(models.Model):
     receiver_surname = models.CharField(max_length=24)
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=20, null=True, blank=True)
+    status = models.CharField(max_length=20, null=True, blank=True)
+    delivered = models.BooleanField(default=False)
+    delivery_user = models.ForeignKey('delivery.DeliveryUser', on_delete=models.SET_NULL, null=True, blank=True, related_name='delivery_orders')
 
     def get_user_order_products(self, user):
         return self.products.filter(user=user)
