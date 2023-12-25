@@ -14,6 +14,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     surname = models.CharField(max_length=24, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     address = models.CharField(max_length=200, blank=True, null=True)
+    is_employee = models.BooleanField(default=False)
+    
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -71,7 +73,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
     delivered = models.BooleanField(default=False)
-    delivery_user = models.ForeignKey('delivery.DeliveryUser', on_delete=models.SET_NULL, null=True, blank=True, related_name='delivery_orders')
+    delivery = models.ForeignKey('delivery.Employee', on_delete=models.CASCADE, null=True, blank=True)
 
     def get_user_order_products(self, user):
         return self.products.filter(user=user)
