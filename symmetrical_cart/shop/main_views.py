@@ -72,7 +72,8 @@ def add_to_cart(request, product_slug):
     # Create new order and add new product
     else:
         order = Order.objects.create(user=request.user,
-                                     order_date=timezone.now())
+                                     order_date=timezone.now(),
+                                     status="In cart")
         order.products.add(order_product)
         msg = f"Product: {product.name} is added to your cart."
         return redirect('cart')
@@ -138,6 +139,7 @@ def checkout(request):
             order.receiver_surname = cleaned_data.get('receiver_surname')
             order.phone = cleaned_data.get('phone')
             order.address = cleaned_data.get('address')
+            order.status = "Ordered"
 
             order.ordered = True
             order.save()
