@@ -1,0 +1,83 @@
+{% extends 'delivery_base.html' %}
+{% block title %}My Orders{% endblock %}
+{% block content %}
+    <div class="row mx-2">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3 my-2">
+            <h3>Current Orders:</h3>
+            <div class="accordion">
+                {% for order in current_orders %}
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            <div class="mb-0 d-flex justify-content-between">
+                                <button 
+                                    class="btn btn-link"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse_{{ order.id }}"
+                                    aria-expanded="true"
+                                >
+                                {{ order }}
+                                </button>
+                                    <small>{{ order.order_date }}</small>
+                            </div>
+                        </div>
+                        <div id="collapse_{{ order.id }}" class="collapse">
+                            <div class="card-body">
+                                <ul>
+                                    {% for product in order.products.all %}
+                                    <li>Name: {{ product.product.name }} | Quantity: {{ product.quantity }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <p>Ordered by: {{ order.receiver_name }} {{ order.receiver_surname }}</p>
+                                <p>Phone: {{ order.phone }}</p>
+                                <address>Address: {{ order.address }}</address>
+                                <a href="{% url 'decline-order' %}" class="btn btn-outline-danger">Decline order</a>
+                                <a href="{% url 'complete-order' %}" class="btn btn-outline-success">Complete order</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include 'pagination.html' with page_obj=current_orders %}
+            </div>
+        </div>
+        <div class="col-md-3 my-2">
+            <h3>Orders History:</h3>
+            <div class="accordion">
+            {% for order in delivered_orders_page_obj %}
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <div class="mb-0 d-flex justify-content-between">
+                            <button 
+                                class="btn btn-link"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse_{{ order.id }}"
+                                aria-expanded="true"
+                            >
+                            {{ order }}
+                            </button>
+                                <small>{{ order.order_date }}</small>
+                        </div>
+                    </div>
+                    <div id="collapse_{{ order.id }}" class="collapse">
+                        <div class="card-body">
+                            <ul>
+                                {% for product in order.products.all %}
+                                <li>Name: {{ product.product.name }} | Quantity: {{ product.quantity }}</li>
+                                {% endfor %}
+                            </ul>
+                            <p>Ordered by: {{ order.receiver_name }} {{ order.receiver_surname }}</p>
+                            <p>Phone: {{ order.phone }}</p>
+                            <address>Address: {{ order.address }}</address>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% include 'pagination.html' with page_obj=delivered_orders_page_obj %}
+        </div>
+    </div>
+
+{% endblock content %}
+

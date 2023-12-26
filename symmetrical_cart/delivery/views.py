@@ -51,3 +51,28 @@ def accept_order(request, order_id):
         messages.info(request, "Order added.")
 
     return redirect('delivery_index')
+
+@login_required()
+def my_orders(request):
+    employee = get_object_or_404(Employee, user=request.user)
+    if employee:
+        current_orders = Order.objects.filter(delivery=employee, status="Taken").order_by("-order_date")
+        delivered_orders = Order.objects.filter(delivery=employee, status="Delivered").order_by("-order_date")
+
+        current_orders_paginator = Paginator(current_orders, 10)
+        print(current_orders_paginator)
+        current_orders_page_number = request.GET.get("current_page")
+        current_orders_page_obj = current_orders_paginator.get_page(current_orders_page_number)
+
+        delivered_orders_paginator = Paginator(delivered_orders, 10)
+        delivered_orders_page_number = request.GET.get("delivered_page")
+        delivered_orders_page_obj = delivered_orders_paginator.get_page(delivered_orders_page_number)
+
+        context = {
+            "current_orders": current_orders_page_obj,
+            "delivered_orders": delivered_orders_page_obj,
+        }
+        
+        return render(request, 'my_orders.html', context)
+
+

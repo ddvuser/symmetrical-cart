@@ -41,15 +41,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-		    {% if request.user.is_employee %}
+                {% if request.user.is_employee %}
                 <!-- Left-aligned items for authenticated users -->
                 <li class="nav-item">
-                    <a class="nav-link" href=""></a>
+                    <a class="nav-link" href="{% url 'my_orders' %}">My orders</a>
                 </li>
                 {% else %}
                 <!-- Left-aligned items for guests -->
                 <li class="nav-item">
-                    <a class="nav-link" href="">Login</a>
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
                 </li>
                 {% endif %}
             </ul>
