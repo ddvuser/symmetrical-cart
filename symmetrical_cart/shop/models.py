@@ -72,7 +72,7 @@ class Order(models.Model):
     address = models.CharField(max_length=200)
     phone = models.CharField(max_length=20, null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
-    delivered_date = models.DateTimeField()
+    delivered_date = models.DateTimeField(null=True, blank=True)
     delivery_rate = models.IntegerField(default=1)
     delivery = models.ForeignKey('delivery.Employee', on_delete=models.CASCADE, null=True, blank=True)
 

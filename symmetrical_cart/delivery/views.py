@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from .filters import OrderFilter 
 from django.contrib import messages
 from django.db.models import Q
+from django.utils import timezone
 
 @login_required()
 def delivery_index(request):
@@ -91,6 +92,7 @@ def complete_order(request, order_id):
 
     if order in employee.current_orders.all():
         order.status = "Delivered"
+        order.delivered_date = timezone.now()
         order.save()
         messages.info(request, "You've completed this order.")
     else:
