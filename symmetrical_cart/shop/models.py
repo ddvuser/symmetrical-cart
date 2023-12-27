@@ -73,7 +73,8 @@ class Order(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
     delivered_date = models.DateTimeField(null=True, blank=True)
-    delivery_rate = models.IntegerField(default=1)
+    delivery_rate = models.IntegerField(null=True, blank=True)
+    rated_by_user = models.BooleanField(default=False)
     delivery = models.ForeignKey('delivery.Employee', on_delete=models.CASCADE, null=True, blank=True)
 
     def get_user_order_products(self, user):

@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import PasswordResetForm
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from .validators.form_fields import (
     phone_validator,
     name_validator,
@@ -227,4 +227,15 @@ class EditUserForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['phone'].required = False
         self.fields['address'].required = False
+
+class RateDeliveryForm(forms.Form):
+    rating = forms.IntegerField(
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Rating',
+            'type': 'number',
+        }),
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+        
+    )
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Product, OrderProduct, Order, Category
-from .forms import ProductQuantityForm, ConfirmOrderForm
+from .forms import ProductQuantityForm, ConfirmOrderForm, RateDeliveryForm
 from .filters import ProductFilter
 from django.core.paginator import Paginator
 from django.utils import timezone
@@ -170,3 +170,22 @@ def checkout(request):
         'is_get_form': is_get_form,
     }
     return render(request, 'cart/checkout.html', context)
+
+@login_required()
+def rate_delivery(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    if request.method == 'POST':
+        form = RateDeliveryForm(request.POST)
+        if form.is_valid():
+            rating = form.cleaned_data.get('rating')
+            order.delivery_rate = rating 
+            order.rated_by_user = True
+            order.save()
+            return redirect('profile')
+        else:
+            messages.error(request, 'Invalid rating.')
+    return redirect('profile')
+
+
+
+

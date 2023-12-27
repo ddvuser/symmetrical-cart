@@ -85,6 +85,36 @@
                                     {% for product in order.products.all %}
                                     <li>Name: {{ product.product.name }} | Quantity: {{ product.quantity }}</li>
                                     {% endfor %}
+                                    {% if order.rated_by_user %}
+                                        <small>Delivery Rating: {{ order.delivery_rate }}</small>
+                                    {% endif %}
+                                    {% if order.status == 'Delivered' and not order.rated_by_user %}
+                                        <form method='post' action="{% url 'rate_delivery' order.id %}">
+                                            {% csrf_token %}
+                                            <div class="row mb-3">
+                                                <div class="col">
+                                                    {% for field in rate_form %}
+                                                        {{ field }}
+                                                        {% if field.errors %}
+                                                            {% render_field field class+="is-invalid" %}
+                                                        {% endif %}
+                                                        {% if field.errors %}
+                                                            <div class="invalid-feedback">
+                                                                {{ field.errors}}
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <button class="btn btn-outline-warning" type="submit">
+                                                        Rate Delivery
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>

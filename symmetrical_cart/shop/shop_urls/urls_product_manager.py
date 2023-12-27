@@ -28,4 +28,8 @@ urlpatterns = [
          main_views.category_detail, 
          name='category_detail'),
 
+    path("rate-delivery/<int:order_id>",
+         main_views.rate_delivery,
+         name='rate_delivery'),
+
 ]

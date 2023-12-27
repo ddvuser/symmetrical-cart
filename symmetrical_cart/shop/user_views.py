@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound, HttpResponseBadRequest
-from .forms import RegisterForm, LoginForm, CustomPasswordChangeForm, EditUserForm
+from .forms import RegisterForm, LoginForm, CustomPasswordChangeForm, EditUserForm, RateDeliveryForm
 from .models import Order
 from django.core.paginator import Paginator
 import random
@@ -180,9 +180,13 @@ def user_profile(request):
     paginator = Paginator(orders, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    
+    rate_form = RateDeliveryForm()
+
     context = {
         'orders': page_obj,
         'form': form,
         'is_get_form': is_get_form,
+        'rate_form': rate_form,
     }
     return render(request, 'profile.html', context)
