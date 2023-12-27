@@ -33,8 +33,16 @@
                                 <p>Ordered by: {{ order.receiver_name }} {{ order.receiver_surname }}</p>
                                 <p>Phone: {{ order.phone }}</p>
                                 <address>Address: {{ order.address }}</address>
-                                <a href="{% url 'decline-order' %}" class="btn btn-outline-danger">Decline order</a>
-                                <a href="{% url 'complete-order' %}" class="btn btn-outline-success">Complete order</a>
+                                <a href="{% url 'decline_order' order.id %}" 
+                                    class="btn btn-outline-danger"
+                                >
+                                    Decline order
+                                </a>
+                                <a href="{% url 'complete_order' order.id %}" 
+                                    class="btn btn-outline-success"
+                                >
+                                    Complete order
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -43,9 +51,9 @@
             </div>
         </div>
         <div class="col-md-3 my-2">
-            <h3>Orders History:</h3>
+            <h3>Completed Orders:</h3>
             <div class="accordion">
-            {% for order in delivered_orders_page_obj %}
+            {% for order in delivered_orders %}
                 <div class="card mb-2">
                     <div class="card-header">
                         <div class="mb-0 d-flex justify-content-between">

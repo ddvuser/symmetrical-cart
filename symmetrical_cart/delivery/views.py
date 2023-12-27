@@ -6,13 +6,17 @@ from .models import Employee
 from django.core.paginator import Paginator
 from .filters import OrderFilter 
 from django.contrib import messages
+from django.db.models import Q
 
 @login_required()
 def delivery_index(request):
     if not request.user.is_employee:
         return redirect('index')
 
-    order_filter = OrderFilter(request.GET, Order.objects.all().order_by("-order_date"))
+    order_filter = OrderFilter(
+        request.GET,
+        Order.objects.filter(Q(status="Ordered") | Q(status="Taken")).order_by("-order_date")
+    )
     filtered_orders = order_filter.qs
 
     orders = Order.objects.filter(delivery=None)
@@ -53,6 +57,48 @@ def accept_order(request, order_id):
     return redirect('delivery_index')
 
 @login_required()
+def decline_order(request, order_id):
+    employee = get_object_or_404(Employee, user=request.user)
+
+    if not request.user.is_employee or not employee:
+        return redirect('index')
+
+    order = get_object_or_404(Order, id=order_id)
+    if not order:
+        return redirect('delivery_index')
+
+    if order in employee.current_orders.all():
+        order.delivery = None
+        order.status = "Ordered"
+        employee.current_orders.remove(order)
+        order.save()
+        messages.info(request, "Order declined.")
+    else:
+        messages.info(request, "You did not take this order.")
+
+    return redirect('delivery_index')
+
+@login_required()
+def complete_order(request, order_id):
+    employee = get_object_or_404(Employee, user=request.user)
+
+    if not request.user.is_employee or not employee:
+        return redirect('index')
+
+    order = get_object_or_404(Order, id=order_id)
+    if not order:
+        return redirect('delivery_index')
+
+    if order in employee.current_orders.all():
+        order.status = "Delivered"
+        order.save()
+        messages.info(request, "You've completed this order.")
+    else:
+        messages.info(request, "You did not take this order.")
+
+    return redirect('delivery_index')
+
+@login_required()
 def my_orders(request):
     employee = get_object_or_404(Employee, user=request.user)
     if employee:
@@ -60,7 +106,6 @@ def my_orders(request):
         delivered_orders = Order.objects.filter(delivery=employee, status="Delivered").order_by("-order_date")
 
         current_orders_paginator = Paginator(current_orders, 10)
-        print(current_orders_paginator)
         current_orders_page_number = request.GET.get("current_page")
         current_orders_page_obj = current_orders_paginator.get_page(current_orders_page_number)
 
