@@ -118,6 +118,7 @@ def my_orders(request):
         context = {
             "current_orders": current_orders_page_obj,
             "delivered_orders": delivered_orders_page_obj,
+            "employee_rating": employee.ratings,
         }
         
         return render(request, 'my_orders.html', context)
