@@ -9,8 +9,8 @@ class UserFormsTests(TestCase):
             'email': 'test@example.com',
             'name': 'John',
             'surname': 'Doe',
-            'password1': 'testpassword',
-            'password2': 'testpassword',
+            'password1': 'Testpassword1_',
+            'password2': 'Testpassword1_',
         }
         form = RegisterForm(data=form_data)
         self.assertTrue(form.is_valid())

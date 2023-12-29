@@ -8,7 +8,7 @@ phone_validator = RegexValidator(
     code='invalid_phone_number'
 )
 
-name_regex = r'^[A-Z][a-zA-Z]{3,}(?: [A-Z][a-zA-Z]*){0,2}$'
+name_regex = r'^[A-Z][a-zA-Z]{2,}(?: [A-Z][a-zA-Z]*){0,2}$'
 
 name_validator = RegexValidator(
     regex = name_regex,
