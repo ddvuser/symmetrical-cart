@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', BASE_DIR / 'db.sqlite3'),
         'USER': os.getenv('DB_USER', 'user'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'password'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'HOST': os.getenv('DB_HOST', 'db'),
         'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
