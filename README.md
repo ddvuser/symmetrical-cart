@@ -14,7 +14,7 @@ Simple e-commerce application build with Django, PostgreSQL and Docker.
 2. Configure environment:
 You have to create `.env.dev` and `.env.db.dev`:
 ```bash
-cd symmetrical-cart
+cd symmetrical_cart/symmetrical_cart/
 touch .env.dev .env.db.dev
 ```
 
